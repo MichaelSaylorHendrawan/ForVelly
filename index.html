@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>woi cil 💙</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-deep: #0a1628;
+    --blue-dark: #0d1f3c;
+    --blue-mid: #1a3a6b;
+    --blue-bright: #2563eb;
+    --blue-light: #60a5fa;
+    --blue-pale: #bfdbfe;
+    --blue-glow: #93c5fd;
+    --accent: #f0abfc;
+    --accent2: #fde68a;
+    --white: #f0f9ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--blue-deep);
+    font-family: 'Nunito', sans-serif;
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  .stars {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .star {
+    position: absolute; background: white; border-radius: 50%;
+    animation: twinkle var(--dur) ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.1; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.4); }
+  }
+
+  .bubbles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .bubble {
+    position: absolute; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(96,165,250,0.15), rgba(37,99,235,0.05));
+    border: 1px solid rgba(96,165,250,0.1);
+    animation: floatUp var(--dur) ease-in-out infinite;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(110vh) scale(0.8); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(-10vh) scale(1.1); opacity: 0; }
+  }
+
+  .container {
+    position: relative; z-index: 10;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+
+  .screen {
+    display: none; flex-direction: column;
+    align-items: center; text-align: center;
+    max-width: 600px; width: 100%;
+    animation: fadeInUp 0.6s ease forwards;
+  }
+  .screen.active { display: flex; }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card {
+    background: rgba(13, 31, 60, 0.85);
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    border-radius: 28px;
+    padding: 40px 36px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 60px rgba(37,99,235,0.15), 0 20px 60px rgba(0,0,0,0.4);
+    width: 100%;
+  }
+
+  .emoji-big {
+    font-size: 72px; margin-bottom: 16px; display: block;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  h1 { font-family: 'Caveat', cursive; font-size: 2.8rem; font-weight: 700; color: var(--blue-pale); margin-bottom: 10px; line-height: 1.2; }
+  h2 { font-family: 'Caveat', cursive; font-size: 2.2rem; color: var(--blue-light); margin-bottom: 16px; }
+  p { color: var(--blue-glow); font-size: 1.05rem; line-height: 1.7; margin-bottom: 24px; opacity: 0.9; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white; border: none; border-radius: 50px; padding: 14px 32px;
+    font-size: 1.05rem; font-weight: 700; font-family: 'Nunito', sans-serif;
+    cursor: pointer; transition: all 0.25s ease;
+    box-shadow: 0 4px 20px rgba(37,99,235,0.4);
+    margin: 6px;
+  }
+  .btn:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 30px rgba(37,99,235,0.6); background: linear-gradient(135deg, #3b82f6, #2563eb); }
+  .btn:active { transform: scale(0.97); }
+
+  .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; margin: 10px 0 24px; }
+  .mood-btn {
+    background: rgba(26,58,107,0.5); border: 1.5px solid rgba(96,165,250,0.2);
+    border-radius: 18px; padding: 20px 16px; cursor: pointer; transition: all 0.3s ease;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--blue-pale); font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.95rem;
+  }
+  .mood-btn .mood-emoji { font-size: 2.4rem; }
+  .mood-btn:hover { background: rgba(37,99,235,0.3); border-color: var(--blue-light); transform: translateY(-4px) scale(1.03); box-shadow: 0 8px 24px rgba(37,99,235,0.3); }
+  .mood-btn.selected { background: rgba(37,99,235,0.4); border-color: var(--blue-glow); box-shadow: 0 0 20px rgba(96,165,250,0.4); }
+
+  #game-area {
+    width: 100%; height: 220px; position: relative;
+    background: rgba(10,22,40,0.6); border-radius: 18px;
+    border: 1px solid rgba(96,165,250,0.2); overflow: hidden;
+    margin: 16px 0; cursor: crosshair;
+  }
+  .star-target {
+    position: absolute; font-size: 2rem; cursor: pointer;
+    user-select: none; animation: starAppear 0.2s ease;
+    transition: transform 0.1s, opacity 0.2s;
+  }
+  @keyframes starAppear {
+    from { transform: scale(0) rotate(-30deg); opacity: 0; }
+    to { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  .star-target:hover { transform: scale(1.3); }
+
+  .score-display { font-family: 'Caveat', cursive; font-size: 3rem; color: var(--accent2); margin: 8px 0; text-shadow: 0 0 20px rgba(253,230,138,0.5); }
+
+  .progress-bar { width: 100%; height: 8px; background: rgba(26,58,107,0.5); border-radius: 10px; overflow: hidden; margin: 8px 0 8px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #60a5fa); border-radius: 10px; transition: width 0.1s linear; box-shadow: 0 0 10px rgba(96,165,250,0.5); }
+  .timer-text { font-size: 0.9rem; color: var(--blue-glow); opacity: 0.8; margin-bottom: 4px; }
+
+  .message-card {
+    background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(13,31,60,0.9));
+    border: 1px solid rgba(96,165,250,0.3); border-radius: 20px; padding: 24px; margin: 12px 0;
+  }
+  .message-text { font-family: 'Caveat', cursive; font-size: 1.5rem; color: var(--blue-pale); line-height: 1.6; font-weight: 600; white-space: pre-line; }
+
+  .confetti-piece {
+    position: fixed; pointer-events: none;
+    animation: confettiFall var(--dur) ease-in forwards; z-index: 100;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  .divider { width: 60px; height: 3px; background: linear-gradient(90deg, transparent, var(--blue-light), transparent); border-radius: 3px; margin: 16px auto; }
+  .pill { display: inline-block; background: rgba(37,99,235,0.2); border: 1px solid rgba(96,165,250,0.25); border-radius: 50px; padding: 5px 16px; font-size: 0.85rem; color: var(--blue-glow); margin-bottom: 20px; }
+
+  .heart-float { position: fixed; pointer-events: none; font-size: 1.5rem; z-index: 99; animation: heartRise 1.2s ease forwards; }
+  @keyframes heartRise {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-120px) scale(0.5); opacity: 0; }
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 2.2rem; } h2 { font-size: 1.8rem; }
+    .card { padding: 28px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="bubbles" id="bubbles"></div>
+
+<div class="container">
+
+  <div class="screen active" id="screen-1">
+    <div class="card">
+      <span class="emoji-big">💙</span>
+      <h1>HIIII VELLYYY</h1>
+      <div class="divider"></div>
+      <p>i made this lil thing just for u<br>come play for a sec, okay? 🌙</p>
+      <button class="btn" onclick="goTo(2)">okay fine 💙</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-2">
+    <div class="card">
+      <span class="emoji-big">🌊</span>
+      <h2>how r u feeling rn?</h2>
+      <p>be honest, no judgment here 💙</p>
+      <div class="mood-grid">
+        <button class="mood-btn" onclick="selectMood(this,'tired')"><span class="mood-emoji">😮‍💨</span>tired & drained</button>
+        <button class="mood-btn" onclick="selectMood(this,'sad')"><span class="mood-emoji">🥺</span>kinda sad</button>
+        <button class="mood-btn" onclick="selectMood(this,'overwhelmed')"><span class="mood-emoji">😵‍💫</span>overwhelmed</button>
+        <button class="mood-btn" onclick="selectMood(this,'okay')"><span class="mood-emoji">😌</span>a lil better now</button>
+      </div>
+      <button class="btn" id="mood-next" style="display:none" onclick="goTo(3)">next ✨</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-3">
+    <div class="card">
+      <span class="emoji-big">⭐</span>
+      <h2>catch the stars!</h2>
+      <div class="pill">tap as many as u can in 15s</div>
+      <div class="score-display" id="score">0</div>
+      <div class="progress-bar"><div class="progress-fill" id="progress" style="width:100%"></div></div>
+      <div class="timer-text" id="timer-text">15 seconds left</div>
+      <div id="game-area"></div>
+      <button class="btn" id="start-btn" onclick="startGame()">start! 🌟</button>
+      <button class="btn" id="next-btn" style="display:none" onclick="goTo(4)">see ur message 💙</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-4">
+    <div class="card">
+      <span class="emoji-big" id="result-emoji">💙</span>
+      <h2>for u, bocil</h2>
+      <div class="divider"></div>
+      <div class="message-card"><p class="message-text" id="sweet-message"></p></div>
+      <div class="message-card"><p class="message-text" id="extra-message" style="font-size:1.25rem"></p></div>
+      <p style="margin-top:20px; font-size:0.95rem">from Zzzz 💙</p>
+      <button class="btn" onclick="restart()">play again 🔄</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 3 + 1;
+    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s`;
+    starsEl.appendChild(s);
+  }
+  const bubblesEl = document.getElementById('bubbles');
+  for (let i = 0; i < 12; i++) {
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    const size = 40 + Math.random() * 120;
+    b.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;--dur:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s`;
+    bubblesEl.appendChild(b);
+  }
+
+  let selectedMood = null, score = 0, timeLeft = 15, gameRunning = false, gameTimerInterval = null;
+
+  function goTo(n) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById('screen-' + n);
+    el.classList.add('active');
+    el.style.animation = 'none';
+    requestAnimationFrame(() => { el.style.animation = ''; });
+    if (n === 4) showResult();
+  }
+
+  function selectMood(btn, mood) {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedMood = mood;
+    document.getElementById('mood-next').style.display = 'inline-flex';
+    const rect = btn.getBoundingClientRect();
+    ['💙','⭐','✨'].forEach((em, i) => {
+      const h = document.createElement('div');
+      h.className = 'heart-float';
+      h.textContent = em;
+      h.style.cssText = `left:${rect.left+rect.width/2+(Math.random()-.5)*60}px;top:${rect.top}px;animation-delay:${i*0.15}s`;
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 1400);
+    });
+  }
+
+  const starEmojis = ['⭐','🌟','💫','✨','🌙','💙','🫧'];
+
+  function startGame() {
+    document.getElementById('start-btn').style.display = 'none';
+    score = 0; timeLeft = 15; gameRunning = true;
+    document.getElementById('score').textContent = 0;
+    updateProgress();
+    spawnStar();
+    gameTimerInterval = setInterval(() => {
+      timeLeft--;
+      document.getElementById('timer-text').textContent = timeLeft + ' seconds left';
+      updateProgress();
+      if (timeLeft <= 0) endGame();
+    }, 1000);
+  }
+
+  function updateProgress() {
+    document.getElementById('progress').style.width = (timeLeft / 15 * 100) + '%';
+  }
+
+  function spawnStar() {
+    if (!gameRunning) return;
+    const area = document.getElementById('game-area');
+    if (area.querySelectorAll('.star-target').length < 5) {
+      const el = document.createElement('div');
+      el.className = 'star-target';
+      el.textContent = starEmojis[Math.floor(Math.random() * starEmojis.length)];
+      el.style.left = (8 + Math.random() * 80) + '%';
+      el.style.top = (8 + Math.random() * 75) + '%';
+      el.onclick = (e) => {
+        e.stopPropagation();
+        if (!gameRunning) return;
+        score++;
+        document.getElementById('score').textContent = score;
+        el.style.transform = 'scale(2)';
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 200);
+        spawnStar();
+      };
+      area.appendChild(el);
+    }
+    if (gameRunning) setTimeout(spawnStar, 500 + Math.random() * 700);
+  }
+
+  function endGame() {
+    gameRunning = false;
+    clearInterval(gameTimerInterval);
+    const area = document.getElementById('game-area');
+    area.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:'Caveat',cursive;font-size:2rem;color:#60a5fa;padding:16px">u caught ${score} stars! 🌟</div>`;
+    document.getElementById('timer-text').textContent = 'done! 🎉';
+    document.getElementById('next-btn').style.display = 'inline-flex';
+    launchConfetti();
+  }
+
+  const messages = {
+    tired: {
+      emoji: '🌙',
+      msg: "being tired means u gave it ur all today. that's not weakness — that's strength. rest is not giving up, it's recharging ur beautiful self 💙",
+      extra: "u don't have to be okay all the time. just breathe. tomorrow is a new page. 🌙"
+    },
+    sad: {
+      emoji: '🥺',
+      msg: "it's okay to feel sad. ur feelings are valid and real. crying is just ur heart releasing what it's been holding — let it out 💙",
+      extra: "the sun still rises for u every morning. even on the hardest days, u matter so much. 🌅"
+    },
+    overwhelmed: {
+      emoji: '🫧',
+      msg: "when everything feels like too much, remember — u don't have to do it all at once. one breath. one step. that's enough for right now 💙",
+      extra: "u are stronger than u think. i know it doesn't feel like it rn, but u really are. 🌊"
+    },
+    okay: {
+      emoji: '✨',
+      msg: "glad ur feeling a lil better 💙 even small recoveries count. ur resilience is something special, even if u can't see it yet.",
+      extra: "keep going. the fact that ur still here, still trying — that's everything. ✨"
+    }
+  };
+
+  function showResult() {
+    const m = messages[selectedMood] || messages.okay;
+    document.getElementById('result-emoji').textContent = m.emoji;
+    document.getElementById('sweet-message').textContent = m.msg;
+    const starMsg = score >= 20 ? `and btw — u caught ${score} stars!! that's literally insane energy 🌟` :
+                    score >= 10 ? `also u caught ${score} stars!! not bad at all 💫` :
+                    `also u caught ${score} stars — hey, every star counts 💫`;
+    document.getElementById('extra-message').textContent = m.extra + "\n\n" + starMsg;
+    launchConfetti();
+  }
+
+  function launchConfetti() {
+    const colors = ['#60a5fa','#93c5fd','#bfdbfe','#f0abfc','#fde68a','#a5f3fc'];
+    for (let i = 0; i < 40; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'confetti-piece';
+        c.style.cssText = `left:${Math.random()*100}vw;top:-10px;background:${colors[Math.floor(Math.random()*colors.length)]};--dur:${1.5+Math.random()*2}s;transform:rotate(${Math.random()*360}deg);width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'2px'}`;
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 3500);
+      }, i * 60);
+    }
+  }
+
+  function restart() {
+    selectedMood = null; score = 0;
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('mood-next').style.display = 'none';
+    document.getElementById('start-btn').style.display = 'inline-flex';
+    document.getElementById('next-btn').style.display = 'none';
+    document.getElementById('score').textContent = '0';
+    document.getElementById('timer-text').textContent = '15 seconds left';
+    document.getElementById('progress').style.width = '100%';
+    document.getElementById('game-area').innerHTML = '';
+    goTo(1);
+  }
+</script>
+</body>
+</html>
