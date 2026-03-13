@@ -2,399 +2,1106 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>woi cil 💙</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --blue-deep: #0a1628;
-    --blue-dark: #0d1f3c;
-    --blue-mid: #1a3a6b;
-    --blue-bright: #2563eb;
-    --blue-light: #60a5fa;
-    --blue-pale: #bfdbfe;
-    --blue-glow: #93c5fd;
-    --accent: #f0abfc;
-    --accent2: #fde68a;
-    --white: #f0f9ff;
-  }
+/* ─────────────────────────────────────────────────────
+   §1  VARIABLES & RESET
+───────────────────────────────────────────────────── */
+:root {
+  --blue-deep:   #0a1628;
+  --blue-dark:   #0d1f3c;
+  --blue-mid:    #1a3a6b;
+  --blue-bright: #2563eb;
+  --blue-light:  #60a5fa;
+  --blue-pale:   #bfdbfe;
+  --blue-glow:   #93c5fd;
+  --accent:      #f0abfc;
+  --accent2:     #fde68a;
+  --white:       #f0f9ff;
+}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--blue-deep);
+  font-family: 'Nunito', sans-serif;
+  color: var(--white);
+  min-height: 100vh;
+  overflow: hidden;
+  touch-action: manipulation;
+}
 
-  body {
-    background: var(--blue-deep);
-    font-family: 'Nunito', sans-serif;
-    color: var(--white);
-    min-height: 100vh;
-    overflow-x: hidden;
-    cursor: default;
-  }
+/* ─────────────────────────────────────────────────────
+   §2  BACKGROUND LAYERS
+───────────────────────────────────────────────────── */
+.bg-stars {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  will-change: transform;
+  transition: transform 0.12s ease-out;
+}
+.bg-star {
+  position: absolute; background: white; border-radius: 50%;
+  animation: twinkle var(--dur) ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.12; transform: scale(1); }
+  50% { opacity: 0.95; transform: scale(1.5); }
+}
 
-  .stars {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 0; overflow: hidden;
-  }
-  .star {
-    position: absolute; background: white; border-radius: 50%;
-    animation: twinkle var(--dur) ease-in-out infinite;
-  }
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.1; transform: scale(1); }
-    50% { opacity: 0.9; transform: scale(1.4); }
-  }
+/* ─────────────────────────────────────────────────────
+   §3  LAYOUT & SCREENS
+───────────────────────────────────────────────────── */
+.container {
+  position: relative; z-index: 10;
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.screen {
+  display: none; flex-direction: column;
+  align-items: center; text-align: center;
+  max-width: 560px; width: 100%;
+  animation: fadeInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.screen.active { display: flex; }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  .bubbles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
-  .bubble {
-    position: absolute; border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, rgba(96,165,250,0.15), rgba(37,99,235,0.05));
-    border: 1px solid rgba(96,165,250,0.1);
-    animation: floatUp var(--dur) ease-in-out infinite;
-  }
-  @keyframes floatUp {
-    0% { transform: translateY(110vh) scale(0.8); opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 0.5; }
-    100% { transform: translateY(-10vh) scale(1.1); opacity: 0; }
-  }
+/* ─────────────────────────────────────────────────────
+   §4  CARD
+───────────────────────────────────────────────────── */
+.card {
+  background: rgba(13, 31, 60, 0.88);
+  border: 1px solid rgba(96, 165, 250, 0.22);
+  border-radius: 28px;
+  padding: 30px 26px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 0 60px rgba(37,99,235,0.14), 0 20px 60px rgba(0,0,0,0.45);
+  width: 100%;
+}
 
-  .container {
-    position: relative; z-index: 10;
-    min-height: 100vh;
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
-  }
+/* ─────────────────────────────────────────────────────
+   §5  TYPOGRAPHY
+───────────────────────────────────────────────────── */
+.emoji-big {
+  font-size: 62px; margin-bottom: 10px; display: block;
+  animation: bounce 2.2s ease-in-out infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-11px); }
+}
+h1 { font-family: 'Caveat', cursive; font-size: clamp(2rem, 6vw, 2.7rem); font-weight: 700; color: var(--blue-pale); margin-bottom: 8px; }
+h2 { font-family: 'Caveat', cursive; font-size: clamp(1.7rem, 5vw, 2.1rem); color: var(--blue-light); margin-bottom: 14px; }
+p  { color: var(--blue-glow); font-size: 1rem; line-height: 1.7; margin-bottom: 18px; opacity: 0.9; }
 
-  .screen {
-    display: none; flex-direction: column;
-    align-items: center; text-align: center;
-    max-width: 600px; width: 100%;
-    animation: fadeInUp 0.6s ease forwards;
-  }
-  .screen.active { display: flex; }
+/* ─────────────────────────────────────────────────────
+   §6  BUTTONS
+───────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white; border: none; border-radius: 50px; padding: 12px 26px;
+  font-size: 0.98rem; font-weight: 700; cursor: pointer;
+  transition: all 0.22s ease;
+  box-shadow: 0 4px 18px rgba(37,99,235,0.38); margin: 5px;
+  font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: translateY(-2px) scale(0.97); box-shadow: 0 6px 28px rgba(37,99,235,0.55); }
+.btn-ghost {
+  background: rgba(26,58,107,0.55);
+  border: 1px solid rgba(96,165,250,0.22);
+  box-shadow: none;
+}
+.btn-sm {
+  padding: 7px 14px; font-size: 0.82rem; border-radius: 20px;
+  border: 1px solid rgba(96,165,250,0.28);
+  background: rgba(26,58,107,0.5); color: var(--blue-pale);
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  font-weight: 700; transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-sm:active { background: rgba(37,99,235,0.35); border-color: var(--blue-light); }
 
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+/* ─────────────────────────────────────────────────────
+   §7  MOOD GRID
+───────────────────────────────────────────────────── */
+.mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; width: 100%; margin-bottom: 18px; }
+.mood-btn {
+  background: rgba(26,58,107,0.45); border: 1.5px solid rgba(96,165,250,0.18);
+  border-radius: 17px; padding: 16px 12px; cursor: pointer; transition: all 0.28s ease;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  color: var(--blue-pale); font-weight: 700; font-family: 'Nunito', sans-serif; font-size: 0.9rem;
+  -webkit-tap-highlight-color: transparent;
+}
+.mood-btn .mood-emoji { font-size: 2rem; }
+.mood-btn.selected { background: rgba(37,99,235,0.38); border-color: var(--blue-glow); transform: scale(1.03); }
 
-  .card {
-    background: rgba(13, 31, 60, 0.85);
-    border: 1px solid rgba(96, 165, 250, 0.25);
-    border-radius: 28px;
-    padding: 40px 36px;
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 60px rgba(37,99,235,0.15), 0 20px 60px rgba(0,0,0,0.4);
-    width: 100%;
-  }
+/* ─────────────────────────────────────────────────────
+   §8  GAME SELECT GRID
+───────────────────────────────────────────────────── */
+.game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; width: 100%; margin-bottom: 18px; }
+.game-card {
+  background: rgba(26,58,107,0.42); border: 1.5px solid rgba(96,165,250,0.16);
+  border-radius: 20px; padding: 18px 10px;
+  cursor: pointer; transition: all 0.28s ease;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  color: var(--blue-pale); font-family: 'Nunito', sans-serif; text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.game-card:active {
+  background: rgba(37,99,235,0.32); border-color: var(--blue-light);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(37,99,235,0.28);
+}
+.gc-emoji { font-size: 2.3rem; }
+.gc-title { font-size: 0.88rem; font-weight: 800; color: var(--white); }
+.gc-desc  { font-size: 0.72rem; color: var(--blue-glow); opacity: 0.85; }
 
-  .emoji-big {
-    font-size: 72px; margin-bottom: 16px; display: block;
-    animation: bounce 2s ease-in-out infinite;
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
-  }
+/* ─────────────────────────────────────────────────────
+   §9  GAME SCREEN — HUD
+───────────────────────────────────────────────────── */
+.score-display { font-family: 'Caveat', cursive; font-size: 2.6rem; color: var(--accent2); line-height: 1; }
+.progress-bar  { width: 100%; height: 7px; background: rgba(26,58,107,0.5); border-radius: 10px; overflow: hidden; margin: 5px 0 10px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #60a5fa); border-radius: 10px; transition: width 0.18s linear; }
 
-  h1 { font-family: 'Caveat', cursive; font-size: 2.8rem; font-weight: 700; color: var(--blue-pale); margin-bottom: 10px; line-height: 1.2; }
-  h2 { font-family: 'Caveat', cursive; font-size: 2.2rem; color: var(--blue-light); margin-bottom: 16px; }
-  p { color: var(--blue-glow); font-size: 1.05rem; line-height: 1.7; margin-bottom: 24px; opacity: 0.9; }
+#game-area {
+  width: 100%; min-height: 220px; position: relative;
+  background: rgba(8,18,36,0.65); border-radius: 18px;
+  border: 1px solid rgba(96,165,250,0.13); overflow: hidden;
+  margin: 10px 0; touch-action: none;
+}
 
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    color: white; border: none; border-radius: 50px; padding: 14px 32px;
-    font-size: 1.05rem; font-weight: 700; font-family: 'Nunito', sans-serif;
-    cursor: pointer; transition: all 0.25s ease;
-    box-shadow: 0 4px 20px rgba(37,99,235,0.4);
-    margin: 6px;
-  }
-  .btn:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 30px rgba(37,99,235,0.6); background: linear-gradient(135deg, #3b82f6, #2563eb); }
-  .btn:active { transform: scale(0.97); }
+/* ─────────────────────────────────────────────────────
+   §10  GAME: HEART CATCHER
+───────────────────────────────────────────────────── */
+.catch-obj {
+  position: absolute; font-size: 2rem; cursor: pointer;
+  user-select: none; will-change: top; touch-action: none;
+  transition: transform 0.12s, opacity 0.15s;
+}
+.catch-obj.pop { transform: scale(2) !important; opacity: 0 !important; }
+.combo-label {
+  position: absolute; top: 8px; right: 10px;
+  font-family: 'Caveat', cursive; font-size: 1.35rem; color: var(--accent);
+  pointer-events: none; animation: comboFade 0.65s forwards;
+}
+@keyframes comboFade {
+  from { opacity: 1; transform: translateY(0) scale(1.2); }
+  to   { opacity: 0; transform: translateY(-22px) scale(0.8); }
+}
 
-  .mood-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; margin: 10px 0 24px; }
-  .mood-btn {
-    background: rgba(26,58,107,0.5); border: 1.5px solid rgba(96,165,250,0.2);
-    border-radius: 18px; padding: 20px 16px; cursor: pointer; transition: all 0.3s ease;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
-    color: var(--blue-pale); font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.95rem;
-  }
-  .mood-btn .mood-emoji { font-size: 2.4rem; }
-  .mood-btn:hover { background: rgba(37,99,235,0.3); border-color: var(--blue-light); transform: translateY(-4px) scale(1.03); box-shadow: 0 8px 24px rgba(37,99,235,0.3); }
-  .mood-btn.selected { background: rgba(37,99,235,0.4); border-color: var(--blue-glow); box-shadow: 0 0 20px rgba(96,165,250,0.4); }
+/* ─────────────────────────────────────────────────────
+   §11  GAME: GARDEN BLOOM
+───────────────────────────────────────────────────── */
+.garden-plots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.plot {
+  aspect-ratio: 1; border-radius: 13px;
+  background: rgba(74,46,16,0.42);
+  border: 2px dashed rgba(150,95,45,0.32);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; transition: all 0.22s; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.plot.highlight { border-color: rgba(253,230,138,0.75); background: rgba(101,63,20,0.65); transform: scale(1.07); }
+.plot.planted   { border-style: solid; border-color: rgba(96,165,250,0.28); background: rgba(8,48,18,0.5); cursor: default; }
+.flower-inner   { font-size: 1.8rem; animation: flowerGrow 0.42s cubic-bezier(0.34,1.56,0.64,1) both; display: block; }
+@keyframes flowerGrow {
+  from { transform: scale(0) rotate(-35deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0); opacity: 1; }
+}
+.seed-tray { display: flex; justify-content: center; gap: 10px; padding: 8px; background: rgba(8,16,32,0.55); border-radius: 13px; border: 1px solid rgba(96,165,250,0.1); }
+.seed-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 8px 12px; border-radius: 11px; cursor: pointer;
+  border: 2px solid transparent; transition: all 0.2s;
+  background: rgba(26,58,107,0.48); font-family: 'Nunito', sans-serif;
+  font-size: 0.68rem; font-weight: 700; color: var(--blue-glow);
+  -webkit-tap-highlight-color: transparent; user-select: none;
+}
+.seed-btn .s-emoji { font-size: 1.65rem; display: block; line-height: 1; }
+.seed-btn.active   { border-color: var(--accent2); background: rgba(37,99,235,0.28); color: var(--accent2); }
+.seed-hint {
+  font-size: 0.78rem; color: var(--blue-glow); opacity: 0.7;
+  font-style: italic; text-align: center; padding: 4px 0;
+}
 
-  #game-area {
-    width: 100%; height: 220px; position: relative;
-    background: rgba(10,22,40,0.6); border-radius: 18px;
-    border: 1px solid rgba(96,165,250,0.2); overflow: hidden;
-    margin: 16px 0; cursor: crosshair;
-  }
-  .star-target {
-    position: absolute; font-size: 2rem; cursor: pointer;
-    user-select: none; animation: starAppear 0.2s ease;
-    transition: transform 0.1s, opacity 0.2s;
-  }
-  @keyframes starAppear {
-    from { transform: scale(0) rotate(-30deg); opacity: 0; }
-    to { transform: scale(1) rotate(0deg); opacity: 1; }
-  }
-  .star-target:hover { transform: scale(1.3); }
+/* ─────────────────────────────────────────────────────
+   §12  GAME: WISH UPON A STAR
+───────────────────────────────────────────────────── */
+.affirmation-bar {
+  padding: 8px 14px; min-height: 38px;
+  font-family: 'Caveat', cursive; font-size: 1.1rem; color: var(--accent2);
+  text-align: center; letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(96,165,250,0.1);
+  transition: color 0.3s;
+}
+.wish-sky { width: 100%; flex: 1; position: relative; min-height: 185px; overflow: hidden; }
+.s-star {
+  position: absolute; font-size: 1.7rem; cursor: pointer;
+  user-select: none; touch-action: none;
+  filter: drop-shadow(0 0 7px rgba(253,230,138,0.85));
+  transition: opacity 0.2s;
+}
+.word-pop {
+  position: absolute; pointer-events: none;
+  font-family: 'Caveat', cursive; font-size: 1.15rem; color: var(--accent2);
+  white-space: nowrap;
+  animation: wordPop 0.85s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+@keyframes wordPop {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-46px) scale(0.75); }
+}
 
-  .score-display { font-family: 'Caveat', cursive; font-size: 3rem; color: var(--accent2); margin: 8px 0; text-shadow: 0 0 20px rgba(253,230,138,0.5); }
+/* ─────────────────────────────────────────────────────
+   §13  GAME: COLOR DREAM
+───────────────────────────────────────────────────── */
+#paint-canvas { display: block; border-radius: 14px; touch-action: none; }
+.color-palette { display: flex; justify-content: center; gap: 7px; flex-wrap: wrap; padding: 4px 0; }
+.c-swatch {
+  width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+  border: 3px solid transparent; transition: transform 0.18s, border-color 0.18s;
+  flex-shrink: 0; -webkit-tap-highlight-color: transparent;
+}
+.c-swatch.active { transform: scale(1.32); border-color: rgba(255,255,255,0.9); }
+.canvas-tools { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; padding-top: 4px; }
+.brush-label { font-size: 0.75rem; color: var(--blue-glow); opacity: 0.7; }
+input[type=range] { -webkit-appearance: none; width: 80px; height: 4px; border-radius: 4px; background: rgba(96,165,250,0.3); outline: none; cursor: pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--blue-light); cursor: pointer; }
 
-  .progress-bar { width: 100%; height: 8px; background: rgba(26,58,107,0.5); border-radius: 10px; overflow: hidden; margin: 8px 0 8px; }
-  .progress-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #60a5fa); border-radius: 10px; transition: width 0.1s linear; box-shadow: 0 0 10px rgba(96,165,250,0.5); }
-  .timer-text { font-size: 0.9rem; color: var(--blue-glow); opacity: 0.8; margin-bottom: 4px; }
+/* ─────────────────────────────────────────────────────
+   §14  RESULTS
+───────────────────────────────────────────────────── */
+.message-card {
+  background: linear-gradient(135deg, rgba(37,99,235,0.18), rgba(13,31,60,0.92));
+  border: 1px solid rgba(96,165,250,0.28); border-radius: 18px;
+  padding: 18px 20px; margin: 9px 0;
+}
+.message-text { font-family: 'Caveat', cursive; font-size: 1.35rem; color: var(--blue-pale); white-space: pre-line; line-height: 1.55; }
 
-  .message-card {
-    background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(13,31,60,0.9));
-    border: 1px solid rgba(96,165,250,0.3); border-radius: 20px; padding: 24px; margin: 12px 0;
-  }
-  .message-text { font-family: 'Caveat', cursive; font-size: 1.5rem; color: var(--blue-pale); line-height: 1.6; font-weight: 600; white-space: pre-line; }
-
-  .confetti-piece {
-    position: fixed; pointer-events: none;
-    animation: confettiFall var(--dur) ease-in forwards; z-index: 100;
-  }
-  @keyframes confettiFall {
-    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-  }
-
-  .divider { width: 60px; height: 3px; background: linear-gradient(90deg, transparent, var(--blue-light), transparent); border-radius: 3px; margin: 16px auto; }
-  .pill { display: inline-block; background: rgba(37,99,235,0.2); border: 1px solid rgba(96,165,250,0.25); border-radius: 50px; padding: 5px 16px; font-size: 0.85rem; color: var(--blue-glow); margin-bottom: 20px; }
-
-  .heart-float { position: fixed; pointer-events: none; font-size: 1.5rem; z-index: 99; animation: heartRise 1.2s ease forwards; }
-  @keyframes heartRise {
-    0% { transform: translateY(0) scale(1); opacity: 1; }
-    100% { transform: translateY(-120px) scale(0.5); opacity: 0; }
-  }
-
-  @media (max-width: 480px) {
-    h1 { font-size: 2.2rem; } h2 { font-size: 1.8rem; }
-    .card { padding: 28px 22px; }
-  }
+/* ─────────────────────────────────────────────────────
+   §15  UTILS & ACCESSIBILITY
+───────────────────────────────────────────────────── */
+@media (max-height: 680px) {
+  .card { padding: 18px 16px; }
+  .emoji-big { font-size: 44px; margin-bottom: 6px; }
+  h1 { font-size: 1.9rem; }
+  h2 { font-size: 1.65rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
 </style>
 </head>
 <body>
 
-<div class="stars" id="stars"></div>
-<div class="bubbles" id="bubbles"></div>
+<!-- Background starfield -->
+<div class="bg-stars" id="bg-stars"></div>
 
 <div class="container">
 
+  <!-- ═══════════════ SCREEN 1 · WELCOME ═══════════════ -->
   <div class="screen active" id="screen-1">
     <div class="card">
       <span class="emoji-big">💙</span>
       <h1>HIIII VELLYYY</h1>
-      <div class="divider"></div>
       <p>i made this lil thing just for u<br>come play for a sec, okay? 🌙</p>
       <button class="btn" onclick="goTo(2)">okay fine 💙</button>
     </div>
   </div>
 
+  <!-- ═══════════════ SCREEN 2 · MOOD CHECK ═══════════════ -->
   <div class="screen" id="screen-2">
     <div class="card">
       <span class="emoji-big">🌊</span>
       <h2>how r u feeling rn?</h2>
-      <p>be honest, no judgment here 💙</p>
       <div class="mood-grid">
-        <button class="mood-btn" onclick="selectMood(this,'tired')"><span class="mood-emoji">😮‍💨</span>tired & drained</button>
-        <button class="mood-btn" onclick="selectMood(this,'sad')"><span class="mood-emoji">🥺</span>kinda sad</button>
-        <button class="mood-btn" onclick="selectMood(this,'overwhelmed')"><span class="mood-emoji">😵‍💫</span>overwhelmed</button>
-        <button class="mood-btn" onclick="selectMood(this,'okay')"><span class="mood-emoji">😌</span>a lil better now</button>
+        <button class="mood-btn" onclick="pickMood(this,'tired')">
+          <span class="mood-emoji">😮‍💨</span>tired
+        </button>
+        <button class="mood-btn" onclick="pickMood(this,'sad')">
+          <span class="mood-emoji">🥺</span>sad
+        </button>
+        <button class="mood-btn" onclick="pickMood(this,'overwhelmed')">
+          <span class="mood-emoji">😵‍💫</span>overwhelmed
+        </button>
+        <button class="mood-btn" onclick="pickMood(this,'okay')">
+          <span class="mood-emoji">😌</span>better
+        </button>
       </div>
-      <button class="btn" id="mood-next" style="display:none" onclick="goTo(3)">next ✨</button>
+      <button class="btn" id="mood-next" style="display:none" onclick="goTo(3)">pick a game ✨</button>
     </div>
   </div>
 
+  <!-- ═══════════════ SCREEN 3 · GAME SELECT ═══════════════ -->
   <div class="screen" id="screen-3">
     <div class="card">
-      <span class="emoji-big">⭐</span>
-      <h2>catch the stars!</h2>
-      <div class="pill">tap as many as u can in 15s</div>
-      <div class="score-display" id="score">0</div>
-      <div class="progress-bar"><div class="progress-fill" id="progress" style="width:100%"></div></div>
-      <div class="timer-text" id="timer-text">15 seconds left</div>
-      <div id="game-area"></div>
-      <button class="btn" id="start-btn" onclick="startGame()">start! 🌟</button>
-      <button class="btn" id="next-btn" style="display:none" onclick="goTo(4)">see ur message 💙</button>
+      <span class="emoji-big">🎮</span>
+      <h2>pick ur vibe 🌸</h2>
+      <p style="margin-bottom:14px">choose a mini game to brighten ur day!</p>
+      <div class="game-grid">
+        <button class="game-card" onclick="launchGame('hearts')">
+          <span class="gc-emoji">💗</span>
+          <span class="gc-title">Heart Catcher</span>
+          <span class="gc-desc">tap the falling hearts!</span>
+        </button>
+        <button class="game-card" onclick="launchGame('garden')">
+          <span class="gc-emoji">🌸</span>
+          <span class="gc-title">Garden Bloom</span>
+          <span class="gc-desc">pick a seed &amp; plant!</span>
+        </button>
+        <button class="game-card" onclick="launchGame('stars')">
+          <span class="gc-emoji">⭐</span>
+          <span class="gc-title">Wish on Stars</span>
+          <span class="gc-desc">catch shooting stars!</span>
+        </button>
+        <button class="game-card" onclick="launchGame('canvas')">
+          <span class="gc-emoji">🎨</span>
+          <span class="gc-title">Color Dream</span>
+          <span class="gc-desc">paint ur feelings!</span>
+        </button>
+      </div>
+      <button class="btn btn-ghost" onclick="goTo(2)" style="font-size:0.85rem;padding:9px 18px">← change mood</button>
     </div>
   </div>
 
+  <!-- ═══════════════ SCREEN 4 · GAME PLAY ═══════════════ -->
   <div class="screen" id="screen-4">
     <div class="card">
-      <span class="emoji-big" id="result-emoji">💙</span>
-      <h2>for u, bocil</h2>
-      <div class="divider"></div>
-      <div class="message-card"><p class="message-text" id="sweet-message"></p></div>
-      <div class="message-card"><p class="message-text" id="extra-message" style="font-size:1.25rem"></p></div>
-      <p style="margin-top:20px; font-size:0.95rem">from Zzzz 💙</p>
-      <button class="btn" onclick="restart()">play again 🔄</button>
+
+      <!-- HUD: hidden for canvas (no score/timer) -->
+      <div id="game-hud">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
+          <div class="score-display" id="score-display">0</div>
+          <span id="game-label" style="font-family:'Caveat',cursive;font-size:1.15rem;color:var(--blue-glow)"></span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width:100%"></div>
+        </div>
+      </div>
+
+      <div id="game-area"></div>
+
+      <div id="game-btns" style="margin-top:4px">
+        <button class="btn" id="btn-start" onclick="beginGame()">start! 🌟</button>
+        <button class="btn" id="btn-next" style="display:none" onclick="goTo(5)">see message 💙</button>
+        <button class="btn-sm" onclick="backToMenu()" style="display:block;margin:6px auto 0">← menu</button>
+      </div>
+
     </div>
   </div>
 
-</div>
+  <!-- ═══════════════ SCREEN 5 · RESULTS ═══════════════ -->
+  <div class="screen" id="screen-5">
+    <div class="card">
+      <span class="emoji-big" id="result-emoji">💙</span>
+      <div class="message-card">
+        <p class="message-text" id="msg-mood"></p>
+      </div>
+      <div class="message-card">
+        <p class="message-text" id="msg-score" style="font-size:1.15rem"></p>
+      </div>
+      <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:8px">
+        <button class="btn" onclick="goTo(3)">try another game 🎮</button>
+        <button class="btn btn-ghost" onclick="location.reload()">restart 🔄</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
 
 <script>
-  // Stars
-  const starsEl = document.getElementById('stars');
-  for (let i = 0; i < 80; i++) {
+'use strict';
+
+/* ══════════════════════════════════════════════════════
+   §1  SOUND ENGINE
+   Web Audio API — zero audio files.
+   Named "SFX" to avoid conflict with built-in Audio constructor.
+══════════════════════════════════════════════════════ */
+const SFX = (() => {
+  let _ctx = null;
+
+  function ctx() {
+    if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (_ctx.state === 'suspended') _ctx.resume();
+    return _ctx;
+  }
+
+  /** Generic note: freq Hz, dur seconds, wave type, volume */
+  function note(freq, dur = 0.12, type = 'sine', vol = 0.09) {
+    try {
+      const c = ctx(), t = c.currentTime;
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type;
+      o.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      o.connect(g); g.connect(c.destination);
+      o.start(t); o.stop(t + dur);
+      o.onended = () => { o.disconnect(); g.disconnect(); };
+    } catch (_) {}
+  }
+
+  return {
+    // Short catch sparkle
+    catch:  ()  => { note(500 + Math.random() * 300, 0.11); },
+    // Soft "plop" for planting
+    plant:  ()  => { note(280, 0.18, 'triangle', 0.07); setTimeout(() => note(360, 0.12, 'triangle', 0.05), 80); },
+    // Two-note chime for star wish
+    wish:   ()  => { note(660, 0.10); setTimeout(() => note(880, 0.10), 95); },
+    // Subtle brush stroke whisper
+    brush:  ()  => { note(180 + Math.random() * 80, 0.04, 'sine', 0.025); },
+    // Mood selection tap
+    mood:   ()  => { note(360 + Math.random() * 180, 0.10); },
+    // Victory arpeggio
+    win:    ()  => { [440,550,660,880].forEach((f, i) => setTimeout(() => note(f, 0.18), i * 90)); },
+  };
+})();
+
+/* ══════════════════════════════════════════════════════
+   §2  APP STATE
+══════════════════════════════════════════════════════ */
+const App = {
+  mood:  localStorage.getItem('last_mood') || null,
+  game:  null,    // 'hearts' | 'garden' | 'stars' | 'canvas'
+  score: 0,
+};
+
+/* ══════════════════════════════════════════════════════
+   §3  BACKGROUND — procedural starfield
+══════════════════════════════════════════════════════ */
+(() => {
+  const wrap = document.getElementById('bg-stars');
+  for (let i = 0; i < 65; i++) {
     const s = document.createElement('div');
-    s.className = 'star';
-    const size = Math.random() * 3 + 1;
-    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s`;
-    starsEl.appendChild(s);
+    const sz = 1 + Math.random() * 1.6;
+    s.className = 'bg-star';
+    s.style.cssText =
+      `width:${sz}px;height:${sz}px;` +
+      `left:${Math.random() * 100}%;top:${Math.random() * 100}%;` +
+      `--dur:${2.2 + Math.random() * 4}s;--delay:${Math.random() * 4}s`;
+    wrap.appendChild(s);
   }
-  const bubblesEl = document.getElementById('bubbles');
-  for (let i = 0; i < 12; i++) {
-    const b = document.createElement('div');
-    b.className = 'bubble';
-    const size = 40 + Math.random() * 120;
-    b.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;--dur:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s`;
-    bubblesEl.appendChild(b);
+  // Subtle parallax on pointer move
+  window.addEventListener('pointermove', e => {
+    const x = (e.clientX / window.innerWidth  - 0.5) * 16;
+    const y = (e.clientY / window.innerHeight - 0.5) * 16;
+    wrap.style.transform = `translate(${x}px,${y}px)`;
+  }, { passive: true });
+})();
+
+/* ══════════════════════════════════════════════════════
+   §4  NAVIGATION
+══════════════════════════════════════════════════════ */
+function goTo(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + n).classList.add('active');
+  if (n === 5) showResult();
+}
+
+function backToMenu() {
+  if (App.game) { Games[App.game].cleanup(); App.game = null; }
+  stopTimer();
+  goTo(3);
+}
+
+function pickMood(btn, mood) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  App.mood = mood;
+  localStorage.setItem('last_mood', mood);
+  document.getElementById('mood-next').style.display = 'inline-flex';
+  SFX.mood();
+}
+
+function launchGame(key) {
+  // Cleanup any previously running game
+  if (App.game) Games[App.game].cleanup();
+  stopTimer();
+
+  App.game  = key;
+  App.score = 0;
+
+  // Reset HUD
+  document.getElementById('score-display').textContent = '0';
+  document.getElementById('progress-fill').style.width = '100%';
+  document.getElementById('btn-start').style.display = 'inline-flex';
+  document.getElementById('btn-next').style.display  = 'none';
+  document.getElementById('game-area').innerHTML = '';
+  document.getElementById('game-label').textContent = {
+    hearts: '💗 Heart Catcher',
+    garden: '🌸 Garden Bloom',
+    stars:  '⭐ Wish on Stars',
+    canvas: '🎨 Color Dream',
+  }[key];
+
+  // Canvas has no score/timer — hide HUD
+  const isCanvas = key === 'canvas';
+  document.getElementById('game-hud').style.display  = isCanvas ? 'none' : 'block';
+  document.getElementById('game-btns').style.display = isCanvas ? 'none' : 'block';
+  document.getElementById('btn-start').style.display = isCanvas ? 'none' : 'inline-flex';
+
+  goTo(4);
+  Games[key].init();
+  if (isCanvas) Games[key].start();
+}
+
+function beginGame() {
+  document.getElementById('btn-start').style.display = 'none';
+  Games[App.game].start();
+}
+
+/* ══════════════════════════════════════════════════════
+   §5  SHARED TIMER UTILITY
+══════════════════════════════════════════════════════ */
+let _timerId = null;
+
+function startTimer(seconds, onTick, onDone) {
+  clearInterval(_timerId);
+  let left = seconds;
+  onTick(left, seconds);
+  _timerId = setInterval(() => {
+    left--;
+    onTick(left, seconds);
+    if (left <= 0) { clearInterval(_timerId); onDone(); }
+  }, 1000);
+}
+
+function stopTimer() { clearInterval(_timerId); }
+
+/* ══════════════════════════════════════════════════════
+   §6  GAME: HEART CATCHER
+   Cute objects fall from top, tap to catch before
+   they disappear. Combo multiplier rewards fast taps.
+   Speed & spawn rate increase over time.
+══════════════════════════════════════════════════════ */
+const HeartGame = (() => {
+  const ITEMS    = ['💗','💜','🦋','🌸','⭐','🫧','💝','🌷','✨'];
+  const DURATION = 15;  // seconds
+  let rafId = 0, lastSpawn = 0, spawnMs = 850;
+  let combo = 1, lastCatch = 0;
+  let pool  = [];    // recycled DOM elements (object pool)
+  let alive = false;
+
+  function init() {
+    document.getElementById('game-area').innerHTML =
+      `<div id="catch-field" style="width:100%;height:230px;position:relative;overflow:hidden;touch-action:none"></div>
+       <p style="font-size:0.78rem;margin:4px 0 0;opacity:0.55">tap everything that falls! combos = more points ✨</p>`;
   }
 
-  let selectedMood = null, score = 0, timeLeft = 15, gameRunning = false, gameTimerInterval = null;
+  function start() {
+    alive = true; combo = 1; lastCatch = 0; spawnMs = 850;
+    const field = document.getElementById('catch-field');
+    if (field) field.innerHTML = '';
+    pool = [];
 
-  function goTo(n) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const el = document.getElementById('screen-' + n);
-    el.classList.add('active');
-    el.style.animation = 'none';
-    requestAnimationFrame(() => { el.style.animation = ''; });
-    if (n === 4) showResult();
+    startTimer(DURATION,
+      (left, tot) => {
+        document.getElementById('progress-fill').style.width = (left / tot * 100) + '%';
+        spawnMs = Math.max(380, 850 - ((tot - left) / tot) * 470);
+      },
+      () => { alive = false; cancelAnimationFrame(rafId); endGame(); }
+    );
+    rafId = requestAnimationFrame(loop);
   }
 
-  function selectMood(btn, mood) {
-    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    selectedMood = mood;
-    document.getElementById('mood-next').style.display = 'inline-flex';
-    const rect = btn.getBoundingClientRect();
-    ['💙','⭐','✨'].forEach((em, i) => {
-      const h = document.createElement('div');
-      h.className = 'heart-float';
-      h.textContent = em;
-      h.style.cssText = `left:${rect.left+rect.width/2+(Math.random()-.5)*60}px;top:${rect.top}px;animation-delay:${i*0.15}s`;
-      document.body.appendChild(h);
-      setTimeout(() => h.remove(), 1400);
-    });
-  }
+  function loop(now) {
+    if (!alive) return;
+    if (now - lastSpawn > spawnMs) { spawnItem(); lastSpawn = now; }
 
-  const starEmojis = ['⭐','🌟','💫','✨','🌙','💙','🫧'];
-
-  function startGame() {
-    document.getElementById('start-btn').style.display = 'none';
-    score = 0; timeLeft = 15; gameRunning = true;
-    document.getElementById('score').textContent = 0;
-    updateProgress();
-    spawnStar();
-    gameTimerInterval = setInterval(() => {
-      timeLeft--;
-      document.getElementById('timer-text').textContent = timeLeft + ' seconds left';
-      updateProgress();
-      if (timeLeft <= 0) endGame();
-    }, 1000);
-  }
-
-  function updateProgress() {
-    document.getElementById('progress').style.width = (timeLeft / 15 * 100) + '%';
-  }
-
-  function spawnStar() {
-    if (!gameRunning) return;
-    const area = document.getElementById('game-area');
-    if (area.querySelectorAll('.star-target').length < 5) {
-      const el = document.createElement('div');
-      el.className = 'star-target';
-      el.textContent = starEmojis[Math.floor(Math.random() * starEmojis.length)];
-      el.style.left = (8 + Math.random() * 80) + '%';
-      el.style.top = (8 + Math.random() * 75) + '%';
-      el.onclick = (e) => {
-        e.stopPropagation();
-        if (!gameRunning) return;
-        score++;
-        document.getElementById('score').textContent = score;
-        el.style.transform = 'scale(2)';
-        el.style.opacity = '0';
-        setTimeout(() => el.remove(), 200);
-        spawnStar();
-      };
-      area.appendChild(el);
+    const field = document.getElementById('catch-field');
+    if (field) {
+      for (const el of [...field.querySelectorAll('.catch-obj')]) {
+        const top = parseFloat(el.style.top) || 0;
+        if (top > 108) { el.remove(); pool.push(el); }
+        else el.style.top = (top + 0.38) + '%';
+      }
     }
-    if (gameRunning) setTimeout(spawnStar, 500 + Math.random() * 700);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function spawnItem() {
+    const field = document.getElementById('catch-field');
+    if (!field || field.children.length > 8) return;
+
+    const el = pool.pop() || document.createElement('div');
+    el.className = 'catch-obj';
+    el.textContent = ITEMS[Math.floor(Math.random() * ITEMS.length)];
+    el.style.cssText =
+      `left:${5 + Math.random() * 88}%;top:-6%;` +
+      `position:absolute;font-size:${1.7 + Math.random() * 0.9}rem;` +
+      `user-select:none;touch-action:none;cursor:pointer;transition:transform 0.12s,opacity 0.15s`;
+    el.onpointerdown = e => { e.stopPropagation(); catchItem(el); };
+    field.appendChild(el);
+  }
+
+  function catchItem(el) {
+    if (!alive) return;
+    const now = performance.now();
+    combo     = now - lastCatch < 550 ? combo + 1 : 1;
+    lastCatch = now;
+    App.score += combo;
+    document.getElementById('score-display').textContent = App.score;
+    SFX.catch();
+
+    // Combo label
+    if (combo > 1) {
+      const field = document.getElementById('catch-field');
+      if (field) {
+        const lbl = document.createElement('div');
+        lbl.className = 'combo-label';
+        lbl.textContent = `x${combo}!`;
+        lbl.style.cssText = 'position:absolute;top:8px;right:10px;font-family:\'Caveat\',cursive;font-size:1.3rem;color:var(--accent);pointer-events:none;animation:comboFade 0.65s forwards';
+        field.appendChild(lbl);
+        setTimeout(() => lbl.remove(), 700);
+      }
+    }
+
+    el.classList.add('pop');
+    setTimeout(() => { el.classList.remove('pop'); el.remove(); pool.push(el); }, 180);
   }
 
   function endGame() {
-    gameRunning = false;
-    clearInterval(gameTimerInterval);
-    const area = document.getElementById('game-area');
-    area.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:'Caveat',cursive;font-size:2rem;color:#60a5fa;padding:16px">u caught ${score} stars! 🌟</div>`;
-    document.getElementById('timer-text').textContent = 'done! 🎉';
-    document.getElementById('next-btn').style.display = 'inline-flex';
-    launchConfetti();
+    SFX.win();
+    const field = document.getElementById('catch-field');
+    if (field) field.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--blue-light);font-size:1.05rem">u caught ${App.score} hearts! 💗</div>`;
+    document.getElementById('btn-next').style.display = 'inline-flex';
   }
 
-  const messages = {
-    tired: {
-      emoji: '🌙',
-      msg: "being tired means u gave it ur all today. that's not weakness — that's strength. rest is not giving up, it's recharging ur beautiful self 💙",
-      extra: "u don't have to be okay all the time. just breathe. tomorrow is a new page. 🌙"
-    },
-    sad: {
-      emoji: '🥺',
-      msg: "it's okay to feel sad. ur feelings are valid and real. crying is just ur heart releasing what it's been holding — let it out 💙",
-      extra: "the sun still rises for u every morning. even on the hardest days, u matter so much. 🌅"
-    },
-    overwhelmed: {
-      emoji: '🫧',
-      msg: "when everything feels like too much, remember — u don't have to do it all at once. one breath. one step. that's enough for right now 💙",
-      extra: "u are stronger than u think. i know it doesn't feel like it rn, but u really are. 🌊"
-    },
-    okay: {
-      emoji: '✨',
-      msg: "glad ur feeling a lil better 💙 even small recoveries count. ur resilience is something special, even if u can't see it yet.",
-      extra: "keep going. the fact that ur still here, still trying — that's everything. ✨"
+  function cleanup() { alive = false; cancelAnimationFrame(rafId); stopTimer(); pool = []; }
+
+  return { init, start, cleanup };
+})();
+
+/* ══════════════════════════════════════════════════════
+   §7  GAME: GARDEN BLOOM
+   Tap a seed from the tray to select it.
+   Tap an empty soil plot to plant — watch it grow!
+   Works on mouse, touch, and Apple Pencil.
+══════════════════════════════════════════════════════ */
+const GardenGame = (() => {
+  const SEEDS    = [
+    { key: 'rose',      emoji: '🌹', label: 'rose' },
+    { key: 'sunflower', emoji: '🌻', label: 'sunflower' },
+    { key: 'blossom',   emoji: '🌸', label: 'blossom' },
+    { key: 'tulip',     emoji: '🌷', label: 'tulip' },
+  ];
+  const DURATION = 22;
+  let activeSeed = null;
+  let plots = [];     // null | emoji string per slot
+
+  function init() {
+    plots = Array(6).fill(null);
+    activeSeed = null;
+
+    document.getElementById('game-area').style.minHeight = '290px';
+    document.getElementById('game-area').innerHTML = `
+      <div style="padding:10px;display:flex;flex-direction:column;gap:9px">
+        <div class="garden-plots" id="garden-plots">
+          ${plots.map((_, i) => `<div class="plot" id="plot-${i}" data-idx="${i}">🌱</div>`).join('')}
+        </div>
+        <p class="seed-hint" id="garden-hint">pick a seed below, then tap the soil ☝️</p>
+        <div class="seed-tray" id="seed-tray">
+          ${SEEDS.map(s => `
+            <button class="seed-btn" data-key="${s.key}" data-emoji="${s.emoji}">
+              <span class="s-emoji">${s.emoji}</span>${s.label}
+            </button>`
+          ).join('')}
+        </div>
+      </div>
+    `;
+
+    // Seed selection
+    document.querySelectorAll('.seed-btn').forEach(btn => {
+      btn.addEventListener('pointerdown', e => {
+        e.stopPropagation();
+        document.querySelectorAll('.seed-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeSeed = { key: btn.dataset.key, emoji: btn.dataset.emoji };
+        const hint = document.getElementById('garden-hint');
+        if (hint) hint.textContent = `${activeSeed.emoji} selected! now tap a soil patch 🌱`;
+        SFX.mood();
+      });
+    });
+
+    // Plot tap → plant
+    document.querySelectorAll('.plot').forEach(plot => {
+      plot.addEventListener('pointerdown', e => {
+        e.stopPropagation();
+        const idx = parseInt(plot.dataset.idx);
+        if (!activeSeed || plots[idx] !== null) return;
+        plant(idx, plot);
+      });
+    });
+  }
+
+  function plant(idx, plotEl) {
+    plots[idx] = activeSeed.emoji;
+    App.score++;
+    document.getElementById('score-display').textContent = App.score;
+    SFX.plant();
+
+    plotEl.classList.add('planted');
+    plotEl.innerHTML = `<span class="flower-inner">${activeSeed.emoji}</span>`;
+    plotEl.style.cursor = 'default';
+
+    // All plots filled → small celebration
+    if (plots.every(p => p !== null)) {
+      const hint = document.getElementById('garden-hint');
+      if (hint) hint.textContent = '🌸 ur garden is full! beautiful! 🌸';
     }
+  }
+
+  function start() {
+    startTimer(DURATION,
+      (left, tot) => document.getElementById('progress-fill').style.width = (left / tot * 100) + '%',
+      () => endGame()
+    );
+  }
+
+  function endGame() {
+    SFX.win();
+    document.querySelectorAll('.seed-btn').forEach(b => { b.disabled = true; b.style.opacity = '0.45'; });
+    document.getElementById('btn-next').style.display = 'inline-flex';
+  }
+
+  function cleanup() {
+    stopTimer();
+    document.getElementById('game-area').style.minHeight = '220px';
+    activeSeed = null;
+  }
+
+  return { init, start, cleanup };
+})();
+
+/* ══════════════════════════════════════════════════════
+   §8  GAME: WISH UPON A STAR
+   Shooting stars streak across the sky.
+   Tap them before they fade to unlock affirmation words.
+   Words build a personalised message based on your mood.
+══════════════════════════════════════════════════════ */
+const StarWishGame = (() => {
+  const DURATION = 18;
+
+  // Mood-specific affirmation sentences split into words
+  const WORDS = {
+    tired:       ['rest', 'is', 'self', 'care', '💙', 'u', 'deserve', 'it'],
+    sad:         ['u', 'are', 'not', 'alone', '💙', 'love', 'finds', 'u'],
+    overwhelmed: ['breathe', '✨', 'u', 'are', 'enough', 'right', 'now', '💙'],
+    okay:        ['u', 'are', 'a', 'star', '💙', 'keep', 'shining', 'bright'],
   };
 
-  function showResult() {
-    const m = messages[selectedMood] || messages.okay;
-    document.getElementById('result-emoji').textContent = m.emoji;
-    document.getElementById('sweet-message').textContent = m.msg;
-    const starMsg = score >= 20 ? `and btw — u caught ${score} stars!! that's literally insane energy 🌟` :
-                    score >= 10 ? `also u caught ${score} stars!! not bad at all 💫` :
-                    `also u caught ${score} stars — hey, every star counts 💫`;
-    document.getElementById('extra-message').textContent = m.extra + "\n\n" + starMsg;
-    launchConfetti();
+  let rafId = 0, lastSpawn = 0;
+  let active = false;
+  let wordIdx = 0, sentence = [];
+  let stars = [];  // { el, sx, sy, ex, ey, born, duration }
+
+  function init() {
+    wordIdx = 0; sentence = []; stars = [];
+    document.getElementById('game-area').innerHTML = `
+      <div style="display:flex;flex-direction:column;height:260px">
+        <div class="affirmation-bar" id="affir-bar">✨ tap the shooting stars to reveal ur message...</div>
+        <div class="wish-sky" id="wish-sky"></div>
+      </div>
+    `;
   }
 
-  function launchConfetti() {
-    const colors = ['#60a5fa','#93c5fd','#bfdbfe','#f0abfc','#fde68a','#a5f3fc'];
-    for (let i = 0; i < 40; i++) {
-      setTimeout(() => {
-        const c = document.createElement('div');
-        c.className = 'confetti-piece';
-        c.style.cssText = `left:${Math.random()*100}vw;top:-10px;background:${colors[Math.floor(Math.random()*colors.length)]};--dur:${1.5+Math.random()*2}s;transform:rotate(${Math.random()*360}deg);width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'2px'}`;
-        document.body.appendChild(c);
-        setTimeout(() => c.remove(), 3500);
-      }, i * 60);
+  function start() {
+    active = true; lastSpawn = 0;
+    startTimer(DURATION,
+      (left, tot) => document.getElementById('progress-fill').style.width = (left / tot * 100) + '%',
+      () => { active = false; cancelAnimationFrame(rafId); endGame(); }
+    );
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function loop(now) {
+    if (!active) return;
+    // Spawn interval: starts at 1800ms, shrinks to 900ms
+    const spawnInterval = 1800 - Math.min(stars.length * 60, 900);
+    if (now - lastSpawn > spawnInterval) { spawnStar(); lastSpawn = now; }
+
+    const sky = document.getElementById('wish-sky');
+    if (sky) {
+      stars = stars.filter(s => {
+        const p = (performance.now() - s.born) / s.duration;
+        if (p >= 1 || !s.el.parentNode) { s.el.remove(); return false; }
+        s.el.style.left    = (s.sx + (s.ex - s.sx) * p) + 'px';
+        s.el.style.top     = (s.sy + (s.ey - s.sy) * p) + 'px';
+        s.el.style.opacity = p > 0.82 ? (1 - (p - 0.82) / 0.18) : 1;
+        return true;
+      });
     }
+    rafId = requestAnimationFrame(loop);
   }
 
-  function restart() {
-    selectedMood = null; score = 0;
-    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
-    document.getElementById('mood-next').style.display = 'none';
-    document.getElementById('start-btn').style.display = 'inline-flex';
-    document.getElementById('next-btn').style.display = 'none';
-    document.getElementById('score').textContent = '0';
-    document.getElementById('timer-text').textContent = '15 seconds left';
-    document.getElementById('progress').style.width = '100%';
-    document.getElementById('game-area').innerHTML = '';
-    goTo(1);
+  function spawnStar() {
+    const sky = document.getElementById('wish-sky');
+    if (!sky) return;
+    const W = sky.offsetWidth, H = sky.offsetHeight;
+    const fromLeft = Math.random() > 0.38;
+    const sx = fromLeft ? -24 : 10 + Math.random() * (W * 0.8);
+    const sy = fromLeft ? 10  + Math.random() * (H * 0.82) : -24;
+    const ex = fromLeft ? W + 24 : sx + (Math.random() - 0.4) * W * 0.7;
+    const ey = fromLeft ? sy + (Math.random() - 0.2) * 80 : H + 24;
+
+    const el = document.createElement('div');
+    el.className   = 's-star';
+    el.textContent = '⭐';
+    el.style.left  = sx + 'px';
+    el.style.top   = sy + 'px';
+    el.onpointerdown = e => { e.stopPropagation(); catchStar(el, e); };
+    sky.appendChild(el);
+
+    stars.push({ el, sx, sy, ex, ey, born: performance.now(), duration: 2000 + Math.random() * 900 });
   }
+
+  function catchStar(el, e) {
+    if (!active) return;
+    const wordList = WORDS[App.mood] || WORDS.okay;
+    const word = wordList[wordIdx % wordList.length];
+    wordIdx++;
+    sentence.push(word);
+    App.score++;
+    document.getElementById('score-display').textContent = App.score;
+    SFX.wish();
+
+    // Update affirmation bar
+    const bar = document.getElementById('affir-bar');
+    if (bar) bar.textContent = sentence.join(' ');
+
+    // Floating word burst
+    const sky = document.getElementById('wish-sky');
+    if (sky) {
+      const rect = sky.getBoundingClientRect();
+      const fp = document.createElement('div');
+      fp.className   = 'word-pop';
+      fp.textContent = word;
+      fp.style.left  = (e.clientX - rect.left) + 'px';
+      fp.style.top   = (e.clientY - rect.top)  + 'px';
+      sky.appendChild(fp);
+      setTimeout(() => fp.remove(), 900);
+    }
+
+    // Remove from live list
+    stars = stars.filter(s => s.el !== el);
+    el.remove();
+  }
+
+  function endGame() {
+    stopTimer();
+    SFX.win();
+    const bar = document.getElementById('affir-bar');
+    if (bar) {
+      bar.style.color = 'var(--accent)';
+      bar.textContent = sentence.length > 0
+        ? sentence.join(' ')
+        : '✨ the stars remember ur wishes 💙';
+    }
+    document.getElementById('btn-next').style.display = 'inline-flex';
+  }
+
+  function cleanup() { active = false; cancelAnimationFrame(rafId); stopTimer(); stars = []; }
+
+  return { init, start, cleanup };
+})();
+
+/* ══════════════════════════════════════════════════════
+   §9  GAME: COLOR DREAM
+   Free-form canvas painting with a glowing soft brush.
+   No timer, no score — pure creative expression.
+   Pressure-sensitive on Apple Pencil (pointer.pressure).
+   8 pastel + vivid colors to choose from.
+══════════════════════════════════════════════════════ */
+const CanvasGame = (() => {
+  const PALETTE = ['#FF6B9D','#CE9FFC','#54A8FF','#4ECDC4','#FFE347','#FF7043','#B4F07F','#ffffff'];
+  let cvs = null, ctx = null;
+  let painting = false;
+  let activeColor = PALETTE[0];
+  let brushSize   = 16;   // default radius, overridden by pressure
+
+  function init() {
+    const area = document.getElementById('game-area');
+    area.style.minHeight = '300px';
+    area.innerHTML = `
+      <div style="padding:10px;display:flex;flex-direction:column;gap:8px">
+        <canvas id="paint-canvas" style="width:100%;border-radius:14px;touch-action:none"></canvas>
+        <div class="color-palette" id="palette"></div>
+        <div class="canvas-tools">
+          <span class="brush-label">brush size</span>
+          <input type="range" id="brush-range" min="6" max="40" value="16">
+          <button class="btn-sm" id="btn-clear-canvas">🗑 clear</button>
+          <button class="btn" id="btn-done-canvas" style="padding:9px 20px;font-size:0.88rem">done ✨</button>
+        </div>
+      </div>
+    `;
+
+    // Bind buttons via addEventListener — avoids global-scope onclick issues
+    document.getElementById('btn-clear-canvas').addEventListener('pointerdown', () => clear());
+    document.getElementById('btn-done-canvas').addEventListener('pointerdown',  () => done());
+
+    // Size canvas to fill available width
+    cvs  = document.getElementById('paint-canvas');
+    const W = area.offsetWidth - 20;
+    const H = Math.round(Math.min(200, window.innerHeight * 0.3));
+    cvs.width  = W;
+    cvs.height = H;
+    ctx = cvs.getContext('2d');
+    ctx.fillStyle = '#060d1e';
+    ctx.fillRect(0, 0, W, H);
+
+    // Brush size slider
+    document.getElementById('brush-range').addEventListener('input', e => {
+      brushSize = parseInt(e.target.value);
+    });
+
+    // Build colour palette
+    PALETTE.forEach((col, i) => {
+      const sw = document.createElement('button');
+      sw.className = 'c-swatch' + (i === 0 ? ' active' : '');
+      sw.style.background = col;
+      sw.setAttribute('aria-label', 'color ' + col);
+      sw.addEventListener('pointerdown', () => {
+        document.querySelectorAll('.c-swatch').forEach(s => s.classList.remove('active'));
+        sw.classList.add('active');
+        activeColor = col;
+      });
+      document.getElementById('palette').appendChild(sw);
+    });
+
+    // Painting pointer events
+    cvs.addEventListener('pointerdown', e => { painting = true; paint(e); });
+    cvs.addEventListener('pointermove', e => {
+      if (!painting) return;
+      paint(e);
+      // Throttle audio to every ~4th call to avoid overload
+      if (Math.random() < 0.25) SFX.brush();
+    });
+    cvs.addEventListener('pointerup',    () => { painting = false; });
+    cvs.addEventListener('pointerleave', () => { painting = false; });
+  }
+
+  function getXY(e) {
+    const r  = cvs.getBoundingClientRect();
+    const sx = cvs.width  / r.width;
+    const sy = cvs.height / r.height;
+    return { x: (e.clientX - r.left) * sx, y: (e.clientY - r.top) * sy };
+  }
+
+  function paint(e) {
+    const { x, y } = getXY(e);
+    // Apple Pencil / stylus pressure → larger brush
+    const pressure = (e.pressure > 0.01) ? e.pressure : 0.55;
+    const r = brushSize * (0.5 + pressure);
+
+    // Soft radial-gradient glow brush
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0,   activeColor + 'bb');
+    g.addColorStop(0.45, activeColor + '66');
+    g.addColorStop(1,   activeColor + '00');
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function clear() {
+    if (!ctx) return;
+    ctx.fillStyle = '#060d1e';
+    ctx.fillRect(0, 0, cvs.width, cvs.height);
+  }
+
+  function done() { SFX.win(); goTo(5); }
+
+  function start() {
+    // Canvas is live immediately from init()
+    // Called automatically by launchGame() for canvas key
+  }
+
+  function cleanup() {
+    painting = false;
+    if (cvs) {
+      cvs.removeEventListener('pointerdown', paint);
+      cvs.removeEventListener('pointermove', paint);
+    }
+    cvs = null; ctx = null;
+    document.getElementById('game-area').style.minHeight = '220px';
+  }
+
+  return { init, start, cleanup };
+})();
+
+/* ══════════════════════════════════════════════════════
+   §10  GAME REGISTRY
+══════════════════════════════════════════════════════ */
+const Games = {
+  hearts: HeartGame,
+  garden: GardenGame,
+  stars:  StarWishGame,
+  canvas: CanvasGame,
+};
+
+/* ══════════════════════════════════════════════════════
+   §11  RESULTS
+   Messages personalised by mood.
+   Score line personalised by game.
+══════════════════════════════════════════════════════ */
+const MOOD_MSGS = {
+  tired: {
+    emoji: '🌙',
+    text: 'being tired means u gave it ur all today.\nrest is not giving up —\nit\'s recharging ur beautiful self 💙',
+  },
+  sad: {
+    emoji: '🥺',
+    text: 'it\'s okay to feel sad.\nur feelings are valid & real.\nthe sun still rises for u every morning 🌅',
+  },
+  overwhelmed: {
+    emoji: '🫧',
+    text: 'one breath at a time.\nu don\'t have to do it all at once.\nu are stronger than u think 🌊',
+  },
+  okay: {
+    emoji: '✨',
+    text: 'glad ur feeling better!\nur resilience is something special.\nkeep going — u got this 💙',
+  },
+};
+
+function getScoreMsg(game, score) {
+  const msgs = {
+    hearts: score > 20
+      ? `u caught ${score} hearts! incredible energy 🌟`
+      : `u caught ${score} hearts — proud of u! 💫`,
+    garden: score >= 5
+      ? `u grew ${score} flowers! ur garden is gorgeous 🌸`
+      : `u planted ${score} flowers! every seed matters 🌱`,
+    stars: score >= 6
+      ? `u caught ${score} stars & built ur affirmation! ⭐`
+      : `u caught ${score} shooting stars 💙 the sky heard u`,
+    canvas: 'u painted something beautiful.\nur colors tell a story only u can tell 🎨',
+  };
+  return msgs[game] || msgs.hearts;
+}
+
+function showResult() {
+  const m = MOOD_MSGS[App.mood] || MOOD_MSGS.okay;
+  document.getElementById('result-emoji').textContent = m.emoji;
+  document.getElementById('msg-mood').textContent     = m.text;
+  document.getElementById('msg-score').textContent    = getScoreMsg(App.game, App.score);
+
+  // Cleanup game
+  if (App.game) Games[App.game].cleanup();
+}
 </script>
 </body>
 </html>
