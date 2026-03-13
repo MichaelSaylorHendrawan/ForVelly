@@ -678,6 +678,7 @@ const HeartGame = (() => {
     document.getElementById('btn-next').style.display = 'inline-flex';
   }
 
+<<<<<<< HEAD
   function cleanup() { alive = false; cancelAnimationFrame(rafId); stopTimer(); pool = []; }
 
   return { init, start, cleanup };
@@ -759,6 +760,28 @@ const GardenGame = (() => {
     if (plots.every(p => p !== null)) {
       const hint = document.getElementById('garden-hint');
       if (hint) hint.textContent = '🌸 ur garden is full! beautiful! 🌸';
+=======
+  const messages = {
+    tired: {
+      emoji: '🌙',
+      msg: "being tired means u gave it ur all today. that's not weakness — that's strength. rest is not giving up, it's recharging ur beautiful self 💙",
+      extra: "u don't have to be okay all the time. just breathe. tomorrow is a new page. 🌙"
+    },
+    sad: {
+      emoji: '🥺',
+      msg: "it's okay to feel sad. ur feelings are valid and real. crying is just ur heart releasing what it's been holding — let it out 💙",
+      extra: "the sun still rises for u every morning. even on the hardest days, u matter so much. 🌅"
+    },
+    overwhelmed: {
+      emoji: '🫧',
+      msg: "when everything feels like too much, remember — u don't have to do it all at once. one breath. one step. that's enough for right now 💙",
+      extra: "u are stronger than u think. i know it doesn't feel like it rn, but u really are. 🌊"
+    },
+    okay: {
+      emoji: '✨',
+      msg: "glad ur feeling a lil better 💙 even small recoveries count. ur resilience is something special, even if u can't see it yet.",
+      extra: "keep going. the fact that ur still here, still trying — that's everything. OH YA ANW, CALL ME IF U WANT TO TALK"
+>>>>>>> 893927e1a6d7681c7484392f4c2962f932fa38c0
     }
   }
 
