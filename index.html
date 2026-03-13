@@ -1058,23 +1058,88 @@ const Games = {
    Messages personalised by mood.
    Score line personalised by game.
 ══════════════════════════════════════════════════════ */
+// Messages personalised by BOTH game and mood
+const GAME_MOOD_MSGS = {
+  hearts: {
+    tired: {
+      emoji: '🌙',
+      text: 'kamu literally udah give everything hari ini 💙\nit\'s okay buat rest sekarang —\nyou deserve it, seriously',
+    },
+    sad: {
+      emoji: '💗',
+      text: 'honestly, love tuh selalu find its way ke kamu 💗\nbahkan di hari yang feels heavy sekalipun —\nyou are so worth it, nggak perlu doubt that 🥺',
+    },
+    overwhelmed: {
+      emoji: '💙',
+      text: 'it\'s okay kok nggak bisa handle everything sekaligus 💗\none thing at a time —\nthat\'s literally more than enough',
+    },
+    okay: {
+      emoji: '✨',
+      text: 'honestly kamu tuh so full of love hari ini 💗\nkeep catching all the good things —\nthey\'re literally already coming your way 🌟',
+    },
+  },
+  garden: {
+    tired: {
+      emoji: '🌱',
+      text: 'kamu tuh literally nanam bunga\nbahkan waktu lagi exhausted banget 🌿\nthat\'s so quietly strong of you 💙',
+    },
+    sad: {
+      emoji: '🌸',
+      text: 'setiap bunga yang tumbuh tadi\nhonestly nyimpen a piece of you di dalamnya 🌸\ngrowth tuh valid banget, even di hari yang feels sad 🥺',
+    },
+    overwhelmed: {
+      emoji: '🌿',
+      text: 'taman nggak pernah rushing 🌱\ndia just grows at its own pace —\nand honestly, you can do that too 🫧',
+    },
+    okay: {
+      emoji: '🌸',
+      text: 'tamanmu literally lagi blooming 🌸\njust like you —\nkeep nurturing yourself, you\'re doing so well 💙',
+    },
+  },
+  stars: {
+    tired: {
+      emoji: '🌙',
+      text: 'bintang-bintang literally dengerin semua wishes kamu\nbahkan waktu mata udah mau tutup 🌠\nrest now — the universe is honestly already on it 💙',
+    },
+    sad: {
+      emoji: '💫',
+      text: 'kamu ngirim wishes ke langit\neven from a heavy heart 💫\nhonestly that takes so much courage — every wish was heard 🌟',
+    },
+    overwhelmed: {
+      emoji: '🌟',
+      text: 'kamu milih look up\nbukan tenggelam di chaos-nya 🌙\nthat\'s honestly so wise — keep doing that 💙',
+    },
+    okay: {
+      emoji: '⭐',
+      text: 'wishes kamu literally udah on their way ⭐\nthe universe heard you —\njust keep believing, something good is coming 🌟',
+    },
+  },
+  canvas: {
+    tired: {
+      emoji: '🎨',
+      text: 'kamu literally create something beautiful\nbahkan waktu lagi tired banget 🎨\nhonestly that\'s all the proof you need — you\'re so worth it 💙',
+    },
+    sad: {
+      emoji: '🌈',
+      text: 'colors don\'t lie, and honestly\nperasaanmu tuh so real dan so valid 🎨\nmakasih udah share a piece of yourself hari ini 🥺',
+    },
+    overwhelmed: {
+      emoji: '🫧',
+      text: 'sometimes words just nggak cukup\nand that\'s literally okay 🎨\nkamu express something real tadi — that\'s so brave of you 💙',
+    },
+    okay: {
+      emoji: '✨',
+      text: 'kreativitasmu literally shines 🎨\neven on the most ordinary days —\nnever stop painting your world your own way 🌈',
+    },
+  },
+};
+
+// Fallback (mood only) if game is somehow unknown
 const MOOD_MSGS = {
-  tired: {
-    emoji: '🌙',
-    text: 'being tired means u gave it ur all today.\nrest is not giving up —\nit\'s recharging ur beautiful self 💙',
-  },
-  sad: {
-    emoji: '🥺',
-    text: 'it\'s okay to feel sad.\nur feelings are valid & real.\nthe sun still rises for u every morning 🌅',
-  },
-  overwhelmed: {
-    emoji: '🫧',
-    text: 'one breath at a time.\nu don\'t have to do it all at once.\nu are stronger than u think 🌊',
-  },
-  okay: {
-    emoji: '✨',
-    text: 'glad ur feeling better!\nur resilience is something special.\nkeep going — u got this 💙',
-  },
+  tired:      { emoji: '🌙', text: 'being tired means u gave it ur all today.\nrest is not giving up —\nit\'s recharging ur beautiful self 💙' },
+  sad:        { emoji: '🥺', text: 'it\'s okay to feel sad.\nur feelings are valid & real.\nthe sun still rises for u every morning 🌅' },
+  overwhelmed:{ emoji: '🫧', text: 'one breath at a time.\nu don\'t have to do it all at once.\nu are stronger than u think 🌊' },
+  okay:       { emoji: '✨', text: 'glad ur feeling better!\nur resilience is something special.\nkeep going — u got this 💙' },
 };
 
 function getScoreMsg(game, score) {
@@ -1094,7 +1159,11 @@ function getScoreMsg(game, score) {
 }
 
 function showResult() {
-  const m = MOOD_MSGS[App.mood] || MOOD_MSGS.okay;
+  // Pick message by game first, then mood — fallback to mood-only if needed
+  const gameMsgs = GAME_MOOD_MSGS[App.game];
+  const m = (gameMsgs && gameMsgs[App.mood])
+    ? gameMsgs[App.mood]
+    : (MOOD_MSGS[App.mood] || MOOD_MSGS.okay);
   document.getElementById('result-emoji').textContent = m.emoji;
   document.getElementById('msg-mood').textContent     = m.text;
   document.getElementById('msg-score').textContent    = getScoreMsg(App.game, App.score);
